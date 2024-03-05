@@ -8,6 +8,7 @@ import { useRouter } from 'next/router'
 import { Container, Form, Header, FormError } from './styles'
 import { useEffect } from 'react'
 import { api } from '@/lib/axios'
+import { AxiosError } from 'axios'
 
 const registerFormSchema = z.object({
   username: z
@@ -47,7 +48,12 @@ export default function Register() {
         username: data.username,
       })
     } catch (err) {
-      console.log(err)
+      if (err instanceof AxiosError && err?.response?.data?.message) {
+        alert(err.response.data.message)
+        return
+      }
+
+      console.error(err)
     }
   }
 
@@ -68,7 +74,7 @@ export default function Register() {
           <Text size="sm">Username</Text>
           <TextInput
             crossOrigin=""
-            prefix="ignite.com/"
+            prefix="meeting-scheduler.com/"
             placeholder="username"
             {...register('username')}
           />
