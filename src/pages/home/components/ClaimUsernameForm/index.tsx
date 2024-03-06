@@ -41,7 +41,7 @@ export function ClaimUsernameForm() {
         <TextInput
           crossOrigin=""
           size="sm"
-          prefix="meeting-sheduler.com/"
+          prefix="meeting.com/"
           placeholder="username"
           {...register('username')}
         />
