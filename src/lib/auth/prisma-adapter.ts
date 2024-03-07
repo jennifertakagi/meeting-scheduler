@@ -1,17 +1,15 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+import { NextApiRequest, NextApiResponse, NextPageContext } from 'next'
 import { Adapter } from 'next-auth/adapters'
 import { parseCookies, destroyCookie } from 'nookies'
 import { prisma } from '../prisma'
 
 export function PrismaAdapter(
-  req: NextApiRequest,
-  res: NextApiResponse,
+  req: NextApiRequest | NextPageContext['req'],
+  res: NextApiResponse | NextPageContext['res'],
 ): Adapter {
   return {
     async createUser(user) {
-      const { '@meeting-scheduler:userId': userIdOnCookies } = parseCookies({
-        req,
-      })
+      const { '@ignitecall:userId': userIdOnCookies } = parseCookies({ req })
 
       if (!userIdOnCookies) {
         throw new Error('User ID not found on cookies.')
@@ -28,7 +26,7 @@ export function PrismaAdapter(
         },
       })
 
-      destroyCookie({ res }, '@meeting-scheduler:userId', {
+      destroyCookie({ res }, '@ignitecall:userId', {
         path: '/',
       })
 
