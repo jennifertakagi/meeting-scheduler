@@ -9,7 +9,7 @@ import {
 import { ArrowRight } from 'phosphor-react'
 import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { Container, Header } from '../styles'
+import { Container, FormError, Header } from '../styles'
 
 import {
   IntervalBox,
@@ -19,8 +19,26 @@ import {
   IntervalItem,
 } from './syles'
 import { getWeekDays } from '@/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
 
-const timeIntervalsFormSchema = z.object({})
+const timeIntervalsFormSchema = z.object({
+  intervals: z
+    .array(
+      z.object({
+        weekDay: z.number().min(0).max(6),
+        enabled: z.boolean(),
+        startTime: z.string(),
+        endTime: z.string(),
+      }),
+    )
+    .length(7)
+    .transform((intervals) => intervals.filter((interval) => interval.enabled))
+    .refine((intervals) => intervals.length > 0, {
+      message: 'You need to select at least one day of the week',
+    }),
+})
+
+type TimeIntervalsFormData = z.infer<typeof timeIntervalsFormSchema>
 
 export default function TimeIntervals() {
   const {
@@ -30,6 +48,7 @@ export default function TimeIntervals() {
     formState: { isSubmitting, errors },
     watch,
   } = useForm({
+    resolver: zodResolver(timeIntervalsFormSchema),
     defaultValues: {
       intervals: [
         { weekDay: 0, enabled: true, startTime: '08:00', endTime: '18:00' },
@@ -52,8 +71,10 @@ export default function TimeIntervals() {
     name: 'intervals',
   })
 
-  async function handleSetTimeIntervals() {}
-
+  async function handleSetTimeIntervals(data: TimeIntervalsFormData) {
+    console.log(data)
+  }
+  console.log(errors)
   return (
     <Container>
       <Header>
@@ -110,7 +131,11 @@ export default function TimeIntervals() {
           })}
         </IntervalContainer>
 
-        <Button type="submit">
+        {errors.intervals && (
+          <FormError size="sm">{errors.intervals.root?.message}</FormError>
+        )}
+
+        <Button type="submit" disabled={isSubmitting}>
           Next
           <ArrowRight />
         </Button>
