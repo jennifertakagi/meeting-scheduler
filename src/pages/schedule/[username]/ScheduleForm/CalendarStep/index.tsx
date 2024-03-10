@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Calendar } from '../../../../../components/Calendar'
 import {
   Container,
@@ -8,11 +9,13 @@ import {
 } from './styles'
 
 export function CalendarStep() {
-  const isDateSelected = false
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
+
+  const isDateSelected = !!selectedDate
 
   return (
     <Container isTimePickerOpen={isDateSelected}>
-      <Calendar />
+      <Calendar selectedDate={selectedDate} onDateSelected={setSelectedDate} />
 
       {isDateSelected && (
         <TimePicker>
@@ -21,17 +24,17 @@ export function CalendarStep() {
           </TimePickerHeader>
 
           <TimePickerList>
-            <TimePickerItem>08:00h</TimePickerItem>
-            <TimePickerItem>09:00h</TimePickerItem>
-            <TimePickerItem>10:00h</TimePickerItem>
-            <TimePickerItem>11:00h</TimePickerItem>
-            <TimePickerItem>12:00h</TimePickerItem>
-            <TimePickerItem>13:00h</TimePickerItem>
-            <TimePickerItem>14:00h</TimePickerItem>
-            <TimePickerItem>15:00h</TimePickerItem>
-            <TimePickerItem>16:00h</TimePickerItem>
-            <TimePickerItem>17:00h</TimePickerItem>
-            <TimePickerItem>18:00h</TimePickerItem>
+            <TimePickerItem>08 a.m</TimePickerItem>
+            <TimePickerItem>09 a.m</TimePickerItem>
+            <TimePickerItem>10 a.m</TimePickerItem>
+            <TimePickerItem>11 a.m</TimePickerItem>
+            <TimePickerItem>12 p.m</TimePickerItem>
+            <TimePickerItem>01 p.m</TimePickerItem>
+            <TimePickerItem>02 p.m</TimePickerItem>
+            <TimePickerItem>03 p.m</TimePickerItem>
+            <TimePickerItem>04 p.m</TimePickerItem>
+            <TimePickerItem>05 p.m</TimePickerItem>
+            <TimePickerItem>06 p.m</TimePickerItem>
           </TimePickerList>
         </TimePicker>
       )}
