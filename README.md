@@ -67,7 +67,9 @@ An application to create a meeting scheduler linked with your Google Calendar ðŸ
 
 Features:
 
--
+- Create an account
+- Connect with yout Google Calendar
+- Schedule meeting with other people
 
 ### Built With
 
