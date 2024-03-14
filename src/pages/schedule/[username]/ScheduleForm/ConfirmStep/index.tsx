@@ -5,6 +5,8 @@ import { CalendarBlank, Clock } from 'phosphor-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { ConfirmForm, FormActions, FormError, FormHeader } from './styles'
+import { useRouter } from 'next/router'
+import { api } from '@/lib/axios'
 
 const confirmFormSchema = z.object({
   name: z.string().min(3, { message: 'O nome precisa no mínimo 3 caracteres' }),
@@ -23,6 +25,9 @@ export function ConfirmStep({
   schedulingDate,
   onCancelConfirmation,
 }: ConfirmStepProps) {
+  const router = useRouter()
+  const username = String(router.query.username)
+
   const {
     register,
     handleSubmit,
@@ -31,8 +36,17 @@ export function ConfirmStep({
     resolver: zodResolver(confirmFormSchema),
   })
 
-  function handleConfirmScheduling(data: ConfirmFormData) {
-    console.log(data)
+  async function handleConfirmScheduling(data: ConfirmFormData) {
+    const { name, email, observations } = data
+
+    await api.post(`/users/${username}/schedule`, {
+      name,
+      email,
+      observations,
+      date: schedulingDate,
+    })
+
+    onCancelConfirmation()
   }
 
   const describedDate = dayjs(schedulingDate).format('DD[ de ]MMMM[ de ]YYYY')
