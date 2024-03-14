@@ -1,6 +1,6 @@
 import { Avatar, Heading, Text } from '@ignite-ui/react'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import { prisma } from '../../../lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { Container, UserHeader } from './styles'
 import { ScheduleForm } from './ScheduleForm'
 
