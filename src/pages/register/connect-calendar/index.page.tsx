@@ -5,6 +5,7 @@ import { Container, Header } from '../styles'
 import { AuthError, ConnectBox, ConnectItem } from './syles'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
+import { NextSeo } from 'next-seo'
 
 export default function ConnectCalendar() {
   const session = useSession()
@@ -22,53 +23,60 @@ export default function ConnectCalendar() {
   }
 
   return (
-    <Container>
-      <Header>
-        <Heading as="strong">Connect with Google Calendar!</Heading>
-        <Text>
-          Connect your calendar to automatically check the time busy schedules
-          and new events as they are scheduled.
-        </Text>
+    <>
+      <NextSeo
+        title="Connect with Google Calendar  | Meeting Scheduler"
+        noindex
+      />
 
-        <MultiStep size={4} currentStep={2} />
-      </Header>
+      <Container>
+        <Header>
+          <Heading as="strong">Connect with Google Calendar!</Heading>
+          <Text>
+            Connect your calendar to automatically check the time busy schedules
+            and new events as they are scheduled.
+          </Text>
 
-      <ConnectBox>
-        <ConnectItem>
-          <Text>Google Calendar</Text>
-          {isSignedId ? (
-            <Button size="sm" disabled>
-              Connected
-              <Check />
-            </Button>
-          ) : (
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={handleConnectCalendar}
-            >
-              Connect
-              <ArrowRight />
-            </Button>
+          <MultiStep size={4} currentStep={2} />
+        </Header>
+
+        <ConnectBox>
+          <ConnectItem>
+            <Text>Google Calendar</Text>
+            {isSignedId ? (
+              <Button size="sm" disabled>
+                Connected
+                <Check />
+              </Button>
+            ) : (
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleConnectCalendar}
+              >
+                Connect
+                <ArrowRight />
+              </Button>
+            )}
+          </ConnectItem>
+
+          {hasAuthError && (
+            <AuthError size="sm">
+              Failed to connect to Google, make sure you have enabled the Google
+              Calendar access permissions
+            </AuthError>
           )}
-        </ConnectItem>
 
-        {hasAuthError && (
-          <AuthError size="sm">
-            Failed to connect to Google, make sure you have enabled the Google
-            Calendar access permissions
-          </AuthError>
-        )}
-
-        <Button
-          type="submit"
-          disabled={!isSignedId}
-          onClick={handleNavigateToNextStep}
-        >
-          Next
-          <ArrowRight />
-        </Button>
-      </ConnectBox>
-    </Container>
+          <Button
+            type="submit"
+            disabled={!isSignedId}
+            onClick={handleNavigateToNextStep}
+          >
+            Next
+            <ArrowRight />
+          </Button>
+        </ConnectBox>
+      </Container>
+    </>
   )
 }

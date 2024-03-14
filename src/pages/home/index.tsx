@@ -6,31 +6,39 @@ import { ClaimUsernameForm } from './components/ClaimUsernameForm'
 import previewImage from '../../assets/app-preview.png'
 
 import { Container, Hero, Preview } from './styles'
+import { NextSeo } from 'next-seo'
 
 export default function Home() {
   return (
-    <Container>
-      <Hero>
-        <Heading as="h1" size="4xl">
-          Uncomplicated scheduling
-        </Heading>
-        <Text size="xl">
-          Connect your calendar and let people book appointments in your free
-          time.
-        </Text>
+    <>
+      <NextSeo
+        title="Uncomplicated scheduling | Meeting Scheduler"
+        description="Connect your calendar and let people book appointments in your free time."
+      />
 
-        <ClaimUsernameForm />
-      </Hero>
+      <Container>
+        <Hero>
+          <Heading as="h1" size="4xl">
+            Uncomplicated scheduling
+          </Heading>
+          <Text size="xl">
+            Connect your calendar and let people book appointments in your free
+            time.
+          </Text>
 
-      <Preview>
-        <Image
-          src={previewImage}
-          height={400}
-          quality={100}
-          priority
-          alt="Calendar symbolizing running application"
-        />
-      </Preview>
-    </Container>
+          <ClaimUsernameForm />
+        </Hero>
+
+        <Preview>
+          <Image
+            src={previewImage}
+            height={400}
+            quality={100}
+            priority
+            alt="Calendar symbolizing running application"
+          />
+        </Preview>
+      </Container>
+    </>
   )
 }
