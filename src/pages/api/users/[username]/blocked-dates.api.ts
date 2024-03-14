@@ -1,4 +1,4 @@
-// import dayjs from 'dayjs'
+import dayjs from 'dayjs'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '../../../../lib/prisma'
 
@@ -11,10 +11,10 @@ export default async function handler(
   }
 
   const username = String(req.query.username)
-  const { year, month } = req.query
+  const { date } = req.query
 
-  if (!year || !month) {
-    return res.status(400).json({ message: 'Year or month not specified.' })
+  if (!date) {
+    return res.status(400).json({ message: 'Date no provided.' })
   }
 
   const user = await prisma.user.findUnique({
@@ -27,27 +27,57 @@ export default async function handler(
     return res.status(400).json({ message: 'User does not exist.' })
   }
 
-  const availableWeekDays = await prisma.userTimeInterval.findMany({
+  const referenceDate = dayjs(String(date))
+  const isPastDate = referenceDate.endOf('day').isBefore(new Date())
+
+  if (isPastDate) {
+    return res.json({ possibleTimes: [], availableTimes: [] })
+  }
+
+  const userAvailability = await prisma.userTimeInterval.findFirst({
+    where: {
+      user_id: user.id,
+      week_day: referenceDate.get('day'),
+    },
+  })
+
+  if (!userAvailability) {
+    return res.json({ possibleTimes: [], availableTimes: [] })
+  }
+
+  const { time_start_in_minutes, time_end_in_minutes } = userAvailability
+
+  const startHour = time_start_in_minutes / 60
+  const endHour = time_end_in_minutes / 60
+
+  const possibleTimes = Array.from({ length: endHour - startHour }).map(
+    (_, i) => {
+      return startHour + i
+    },
+  )
+
+  const blockedTimes = await prisma.scheduling.findMany({
     select: {
-      week_day: true,
+      date: true,
     },
     where: {
       user_id: user.id,
+      date: {
+        gte: referenceDate.set('hour', startHour).toDate(),
+        lte: referenceDate.set('hour', endHour).toDate(),
+      },
     },
   })
 
-  const blockedWeekDays = [0, 1, 2, 3, 4, 5, 6].filter((weekDay) => {
-    return !availableWeekDays.some(
-      (availableWeekDay) => availableWeekDay.week_day === weekDay,
+  const availableTimes = possibleTimes.filter((time) => {
+    const isTimeBlocked = blockedTimes.some(
+      (blockedTime) => blockedTime.date.getHours() === time,
     )
+
+    const isTimeInPast = referenceDate.set('hour', time).isBefore(new Date())
+
+    return !isTimeBlocked && !isTimeInPast
   })
 
-  const blockedDatesRaw = await prisma.$queryRaw`
-  SELECT *
-  FROM schedulings S
-  WHERE S.user_id = ${user.id}
-    AND DATE_FORMAT(S.date, "%Y-%m") = ${`${year}-${month}`}
-`
-
-  return res.json({ blockedWeekDays, blockedDatesRaw })
+  return res.json({ possibleTimes, availableTimes })
 }
