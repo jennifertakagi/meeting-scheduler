@@ -73,8 +73,19 @@ Features:
 
 ### Built With
 
+- [Axios](https://axios-http.com/docs/intro)
+- [Day JS](https://day.js.org/)
+- [Google API](https://console.cloud.google.com/apis/library)
+- [Next](https://nextjs.org/)
+- [Next Auth](https://next-auth.js.org/)
+- [Next SEO](https://github.com/garmeeh/next-seo)
+- [Nookies](https://react.dev/)
+- [Prisma](https://www.prisma.io/)
 - [React](https://react.dev/)
+- [React Hook Form](https://react-hook-form.com/)
+- [React Query](https://tanstack.com/query/latest/docs/framework/react/overview)
 - [TypeScript](typescriptlang.org/)
+- [Zod](https://zod.dev/)
 
 <!-- GETTING STARTED -->
 
