@@ -61,9 +61,9 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](#)
-
 An application to create a meeting scheduler linked with your Google Calendar 📅
+
+[![Product Name Screen Shot][product-screenshot]](#)
 
 Features:
 
